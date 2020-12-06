@@ -1,4 +1,3 @@
-using Helpo.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -30,7 +29,6 @@ namespace Helpo
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
             
             services.AddMudBlazorDialog();
             services.AddMudBlazorSnackbar();

@@ -1,0 +1,11 @@
+﻿@page "/Documentation"
+@using Helpo.Shared.Toolbars
+<h3>Documentation</h3>
+
+<MudTextField T="String" Placeholder="Search"></MudTextField>
+
+@code {
+    
+    [CascadingParameter]
+    public Toolbar Toolbar { get; set; } = default!;
+}

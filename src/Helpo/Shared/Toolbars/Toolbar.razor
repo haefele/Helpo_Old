@@ -1,0 +1,25 @@
+﻿@foreach (var button in this.Buttons)
+{
+    <MudButton @key="@button" StartIcon="@button.Icon" Color="Color.Inherit" OnClick="@button.Click">
+        @button.Text
+    </MudButton>
+}
+
+@code {
+
+    private readonly List<ToolbarButton> _buttons = new List<ToolbarButton>();
+
+    public IReadOnlyList<ToolbarButton> Buttons => this._buttons.AsReadOnly();
+
+    public async Task AddButton(ToolbarButton button)
+    {
+        this._buttons.Add(button);
+        await this.InvokeAsync(this.StateHasChanged);
+    }
+
+    public async Task RemoveButton(ToolbarButton button)
+    {
+        this._buttons.Remove(button);
+        await this.InvokeAsync(this.StateHasChanged);
+    }
+}

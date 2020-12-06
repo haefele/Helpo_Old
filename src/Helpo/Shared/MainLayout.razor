@@ -1,21 +1,40 @@
-﻿@inherits LayoutComponentBase
+﻿@using Helpo.Shared.Toolbars
+@inherits LayoutComponentBase
 
 <MudThemeProvider/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<MudLayout>
+    <MudAppBar Elevation="1" Dense="true">
+        <MudIconButton Icon="@Icons.Material.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
+            <MudText Typo="Typo.h5">Helpo</MudText>
+        <Toolbar @ref="_mainToolbar"/>
+    </MudAppBar>
+    <MudDrawer Open="@_drawerOpen" Elevation="1" Clipped="true">
+        <MudNavMenu>
+            <MudNavLink Href="" Match="NavLinkMatch.All">Home</MudNavLink>
+            <MudNavLink Href="/questions">Questions</MudNavLink>
+            <MudNavLink Href="/documentation">Documentation</MudNavLink>
+        </MudNavMenu>
+    </MudDrawer>
+    <MudMainContent Class="px-4">
+        <MudContainer Class="mt-4">
+            <CascadingValue Value="_mainToolbar">
+                @Body
+            </CascadingValue>
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
 
-    <div class="main">
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
+@code
+{
+    private Toolbar _mainToolbar = default!;
 
-        <div class="content px-4">
-            @Body
-        </div>
-    </div>
-</div>
+    private bool _drawerOpen = true;
+    
+    private void ToggleDrawer()
+    {
+        this._drawerOpen = !this._drawerOpen;
+    }
+}
