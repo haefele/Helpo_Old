@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MudBlazor;
+using MudBlazor.Services;
 
 namespace Helpo
 {
@@ -29,6 +31,10 @@ namespace Helpo
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
+            
+            services.AddMudBlazorDialog();
+            services.AddMudBlazorSnackbar();
+            services.AddMudBlazorResizeListener();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
