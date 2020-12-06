@@ -9,6 +9,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using MudBlazor;
 using MudBlazor.Services;
 
@@ -29,6 +32,14 @@ namespace Helpo
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddControllers();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                    .AddCookie(options =>
+                    {
+                        options.LoginPath = "/signin";
+                        options.LogoutPath = "/signout";
+                    });
             
             services.AddMudBlazorDialog();
             services.AddMudBlazorSnackbar();
@@ -53,10 +64,14 @@ namespace Helpo
             app.UseStaticFiles();
 
             app.UseRouting();
+            
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapBlazorHub();
+                endpoints.MapControllers();
                 endpoints.MapFallbackToPage("/_Host");
             });
         }

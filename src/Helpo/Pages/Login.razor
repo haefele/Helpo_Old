@@ -1,0 +1,56 @@
+﻿@using InputType = MudBlazor.InputType
+
+@page "/Login"
+
+<MudContainer MaxWidth="MaxWidth.Small">
+    <MudForm>
+        <MudCard>
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h5">Login</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudTextField T="string"
+                              Label="Username"
+                              Immediate="true"
+                              HelperText="Enter your username"
+                              @bind-Value="@Username"/>
+
+                <MudTextField T="string"
+                              Label="Password"
+                              Immediate="true"
+                              HelperText="Enter your password"
+                              InputType="InputType.Password"
+                              @bind-Value="@Password"/>
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton ButtonType="ButtonType.Submit"
+                           Variant="Variant.Filled"
+                           StartIcon="@Icons.Material.Login"
+                           Color="Color.Primary"
+                           Style="margin-left: auto"
+                           OnClick="@TryLogin"
+                           Disabled="@(!CanLogin)">Login</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudForm>
+</MudContainer>
+
+@code {
+    #nullable enable
+
+    [Inject]
+    public NavigationManager NavigationManager { get; set; } = default!;
+    
+    public string? Username { get; set; }
+    public string? Password { get; set; }
+
+    public bool CanLogin => string.IsNullOrWhiteSpace(this.Username) == false && string.IsNullOrWhiteSpace(this.Password) == false;
+
+    private void TryLogin()
+    {
+        //TODO: Call c-entron Web-Service to do the login
+        this.NavigationManager.NavigateTo("/signin?ticket=12345", forceLoad:true);
+    }
+}

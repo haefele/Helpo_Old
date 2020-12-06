@@ -8,8 +8,23 @@
 <MudLayout>
     <MudAppBar Elevation="1" Dense="true">
         <MudIconButton Icon="@Icons.Material.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
-            <MudText Typo="Typo.h5">Helpo</MudText>
+        <MudText Typo="Typo.h5">Helpo</MudText>
+        
+        <MudAppBarSpacer />
+        
         <Toolbar @ref="_mainToolbar"/>
+        
+        <MudAppBarSpacer />
+        
+        <AuthorizeView>
+            <Authorized>
+                <MudButton StartIcon="@Icons.Material.Person" Color="Color.Inherit" OnClick="@Logout">@context.User.Identity?.Name Logout</MudButton>
+            </Authorized>
+            <NotAuthorized>
+                <MudButton StartIcon="@Icons.Material.Login" Color="Color.Inherit" OnClick="@Login">Login</MudButton>
+            </NotAuthorized>
+        </AuthorizeView>
+        
     </MudAppBar>
     <MudDrawer Open="@_drawerOpen" Elevation="1" Clipped="true">
         <MudNavMenu>
@@ -29,6 +44,11 @@
 
 @code
 {
+    #nullable enable
+
+    [Inject]
+    public NavigationManager NavigationManager { get; set; } = default!;
+    
     private Toolbar _mainToolbar = default!;
 
     private bool _drawerOpen = true;
@@ -36,5 +56,15 @@
     private void ToggleDrawer()
     {
         this._drawerOpen = !this._drawerOpen;
+    }
+
+    private void Login()
+    {
+        this.NavigationManager.NavigateTo("/login");
+    }
+
+    private void Logout()
+    {
+        this.NavigationManager.NavigateTo("/signout", forceLoad:true);
     }
 }

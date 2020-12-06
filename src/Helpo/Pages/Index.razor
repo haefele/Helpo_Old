@@ -3,3 +3,14 @@
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
+
+<AuthorizeView>
+    <Authorized>
+        <p>Name: @context.User.Identity?.Name</p>
+        <p>Admin: @context.User.IsInRole("Admin")</p>
+        <p>Support: @context.User.IsInRole("Support")</p>
+    </Authorized>
+    <NotAuthorized>
+        NotAuthorized!
+    </NotAuthorized>
+</AuthorizeView>
