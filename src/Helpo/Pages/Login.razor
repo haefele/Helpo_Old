@@ -1,4 +1,9 @@
 ﻿@using InputType = MudBlazor.InputType
+@using Helpo.Shared.Commands
+
+@inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
+@inject AuthService AuthService
 
 @page "/Login"
 
@@ -13,44 +18,59 @@
             <MudCardContent>
                 <MudTextField T="string"
                               Label="Username"
+                              Disabled="@LoginCommand.IsExecuting"
                               Immediate="true"
                               HelperText="Enter your username"
                               @bind-Value="@Username"/>
 
                 <MudTextField T="string"
                               Label="Password"
+                              Disabled="@LoginCommand.IsExecuting"
                               Immediate="true"
                               HelperText="Enter your password"
                               InputType="InputType.Password"
                               @bind-Value="@Password"/>
             </MudCardContent>
             <MudCardActions>
-                <MudButton ButtonType="ButtonType.Submit"
-                           Variant="Variant.Filled"
+                <MudButton Variant="Variant.Filled"
                            StartIcon="@Icons.Material.Login"
                            Color="Color.Primary"
                            Style="margin-left: auto"
-                           OnClick="@TryLogin"
-                           Disabled="@(!CanLogin)">Login</MudButton>
+                           Command="@LoginCommand"
+                           Disabled="@(!LoginCommand.CanExecute)">Login</MudButton>
             </MudCardActions>
         </MudCard>
     </MudForm>
+    
+    @if (LoginCommand.IsExecuting)
+    {
+        <MudProgressLinear Indeterminate="true" Color="Color.Primary" />
+    }
 </MudContainer>
 
 @code {
     #nullable enable
-
-    [Inject]
-    public NavigationManager NavigationManager { get; set; } = default!;
     
     public string? Username { get; set; }
     public string? Password { get; set; }
 
-    public bool CanLogin => string.IsNullOrWhiteSpace(this.Username) == false && string.IsNullOrWhiteSpace(this.Password) == false;
+    public HelpoCommand LoginCommand { get; private set; } = default!;
 
-    private void TryLogin()
+    protected override void OnInitialized()
     {
-        //TODO: Call c-entron Web-Service to do the login
-        this.NavigationManager.NavigateTo("/signin?ticket=12345", forceLoad:true);
+        this.LoginCommand = HelpoCommand.Async(this.TryLogin).CanExecute(this.CanLogin).Component(this.StateHasChanged).Snackbar(this.Snackbar);
+    }
+
+    private bool CanLogin()
+    {
+        return string.IsNullOrWhiteSpace(this.Username) == false && 
+               string.IsNullOrWhiteSpace(this.Password) == false;
+    }
+    private async Task TryLogin()
+    {
+        await Task.Delay(TimeSpan.FromSeconds(2));
+
+        var ticket = await this.AuthService.LoginAsync(this.Username, this.Password);
+        this.NavigationManager.NavigateTo($"/signin?ticket={ticket}", forceLoad: true); // The AuthController will finalize the login process
     }
 }

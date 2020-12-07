@@ -1,19 +1,15 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
+using System.Security.Cryptography.X509Certificates;
+using CentronSoftware.Centron.WebServices.Connections;
+using Helpo.Services.Auth;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
 using MudBlazor;
 using MudBlazor.Services;
+using Raven.Client.Documents;
 
 namespace Helpo
 {
@@ -44,6 +40,28 @@ namespace Helpo
             services.AddMudBlazorDialog();
             services.AddMudBlazorSnackbar();
             services.AddMudBlazorResizeListener();
+
+            services.AddSingleton<IDocumentStore>(serviceProvider =>
+            {
+                var store = new DocumentStore();
+                store.Certificate = new X509Certificate2(
+                    this.Configuration.GetValue<string>("RavenDB:ClientCertificatePath"), 
+                    this.Configuration.GetValue<string>("RavenDB:ClientCertificatePassword"));
+                store.Urls = new[] {this.Configuration.GetValue<string>("RavenDB:Url")};
+                store.Database = this.Configuration.GetValue<string>("RavenDB:DatabaseName");
+
+                store.Initialize();
+
+                return store;
+            });
+
+            services.AddSingleton(serviceProvider =>
+            {
+                var url = this.Configuration.GetValue<string>("CentronWebService:Url");
+                return new CentronWebService(url);
+            });
+            
+            services.AddScoped<AuthService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
