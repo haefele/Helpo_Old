@@ -28,7 +28,7 @@ namespace Helpo.Controllers
         {
             return SignOut(new AuthenticationProperties
             {
-                RedirectUri = "/",
+                RedirectUri = "/login",
             }, CookieAuthenticationDefaults.AuthenticationScheme);
         }
     }
