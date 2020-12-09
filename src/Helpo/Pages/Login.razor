@@ -21,15 +21,22 @@
                               Disabled="@LoginCommand.IsExecuting"
                               Immediate="true"
                               HelperText="Enter your username"
-                              @bind-Value="@Username"/>
+                              Adornment="Adornment.End"
+                              AdornmentIcon="@Icons.Material.Person"
+                              OnKeyUp="@OnKeyUp"
+                              @bind-Value="@_username"/>
 
                 <MudTextField T="string"
                               Label="Password"
                               Disabled="@LoginCommand.IsExecuting"
                               Immediate="true"
                               HelperText="Enter your password"
-                              InputType="InputType.Password"
-                              @bind-Value="@Password"/>
+                              Adornment="Adornment.End"
+                              AdornmentIcon="@(this._showPassword ? Icons.Material.Visibility : Icons.Material.VisibilityOff)"
+                              OnAdornmentClick="@(() => this._showPassword = !this._showPassword)"
+                              InputType="@(this._showPassword ? InputType.Text : InputType.Password)"
+                              OnKeyUp="@OnKeyUp"
+                              @bind-Value="@_password"/>
             </MudCardContent>
             <MudCardActions>
                 <MudButton Variant="Variant.Filled"
@@ -50,27 +57,33 @@
 
 @code {
     #nullable enable
-    
-    public string? Username { get; set; }
-    public string? Password { get; set; }
 
-    public HelpoCommand LoginCommand { get; private set; } = default!;
+    private bool _showPassword = false;
+    private string? _username = null;
+    private string? _password = null;
 
     protected override void OnInitialized()
     {
         this.LoginCommand = HelpoCommand.Async(this.TryLogin).CanExecute(this.CanLogin).Component(this.StateHasChanged).Snackbar(this.Snackbar);
     }
 
+    private void OnKeyUp(KeyboardEventArgs obj)
+    {
+        if (string.Equals(obj.Key, "enter", StringComparison.OrdinalIgnoreCase))
+            this.LoginCommand.Execute();
+    }
+
+    private HelpoCommand LoginCommand { get; set; } = default!;
     private bool CanLogin()
     {
-        return string.IsNullOrWhiteSpace(this.Username) == false && 
-               string.IsNullOrWhiteSpace(this.Password) == false;
+        return string.IsNullOrWhiteSpace(this._username) == false && 
+               string.IsNullOrWhiteSpace(this._password) == false;
     }
     private async Task TryLogin()
     {
         await Task.Delay(TimeSpan.FromSeconds(2));
 
-        var ticket = await this.AuthService.LoginAsync(this.Username, this.Password);
+        var ticket = await this.AuthService.LoginAsync(this._username, this._password);
         this.NavigationManager.NavigateTo($"/signin?ticket={ticket}", forceLoad: true); // The AuthController will finalize the login process
     }
 }
