@@ -81,9 +81,9 @@
     }
     private async Task TryLogin()
     {
-        await Task.Delay(TimeSpan.FromSeconds(2));
-
         var ticket = await this.AuthService.LoginAsync(this._username, this._password);
+        this.Snackbar.Add("Login successful.", Severity.Success);
+        
         this.NavigationManager.NavigateTo($"/signin?ticket={ticket}", forceLoad: true); // The AuthController will finalize the login process
     }
 }
