@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Centron.WebServices.Core" Version="2.0.2101.77" />
-    <PackageReference Include="MudBlazor" Version="1.1.5" />
+    <PackageReference Include="MudBlazor" Version="1.2.0" />
     <PackageReference Include="RavenDB.Client" Version="5.1.1" />
   </ItemGroup>
 

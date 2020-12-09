@@ -26,7 +26,7 @@
         </AuthorizeView>
         
     </MudAppBar>
-    <MudDrawer Open="@_drawerOpen" Elevation="1" Clipped="true">
+    <MudDrawer @bind-Open="@_drawerOpen" Elevation="1" Clipped="false">
         <MudNavMenu>
             <MudNavLink Href="" Match="NavLinkMatch.All">Home</MudNavLink>
             <MudNavLink Href="/questions">Questions</MudNavLink>
