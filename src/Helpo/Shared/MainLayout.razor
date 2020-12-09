@@ -28,9 +28,9 @@
     </MudAppBar>
     <MudDrawer @bind-Open="@_drawerOpen" Elevation="1" Clipped="false">
         <MudNavMenu>
-            <MudNavLink Href="" Match="NavLinkMatch.All">Home</MudNavLink>
-            <MudNavLink Href="/questions">Questions</MudNavLink>
-            <MudNavLink Href="/documentation">Documentation</MudNavLink>
+            <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Home">Home</MudNavLink>
+            <MudNavLink Href="/questions" Icon="@Icons.Material.QuestionAnswer">Questions</MudNavLink>
+            <MudNavLink Href="/documentation" Icon="@Icons.Material.Article">Documentation</MudNavLink>
         </MudNavMenu>
     </MudDrawer>
     <MudMainContent Class="px-4">
