@@ -18,7 +18,9 @@
         
         <AuthorizeView>
             <Authorized>
-                <MudButton StartIcon="@Icons.Material.Person" Color="Color.Inherit" OnClick="@Logout">@context.User.Identity?.Name Logout</MudButton>
+                <MudMenu StartIcon="@Icons.Material.Person" Label="@context.User.Identity?.Name" Color="Color.Inherit">
+                    <MudMenuItem OnClick="@Logout">Logout</MudMenuItem>
+                </MudMenu>
             </Authorized>
             <NotAuthorized>
                 <MudButton StartIcon="@Icons.Material.Login" Color="Color.Inherit" OnClick="@Login">Login</MudButton>
