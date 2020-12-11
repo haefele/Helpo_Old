@@ -1,7 +1,4 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build and deploy ASP.Net Core app to Azure Web App - helpo-dev
+name: Build and Deploy to Azure
 
 on:
   push:
@@ -20,11 +17,8 @@ jobs:
       with:
         dotnet-version: '5.0.x'
 
-    - name: Build with dotnet
-      run: dotnet build --configuration Release
-
     - name: dotnet publish
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      run: dotnet publish -c Release -o '../../artifacts/Helpo'
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
@@ -32,4 +26,4 @@ jobs:
         app-name: 'helpo-dev'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_db682f982df74e23a29b76a3d6c8f6e6 }}
-        package: ${{env.DOTNET_ROOT}}/myapp 
+        package: '../../artifacts/Helpo'
