@@ -8,21 +8,24 @@ on:
 jobs:
   build-and-deploy:
     runs-on: windows-latest
-
+    env:
+      DOTNET_NOLOGO: true # disable .NET logo
+    
     steps:
-    - uses: actions/checkout@master
+    - name: checkout git repo
+      uses: actions/checkout@master
       with:
         fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
 
-    - name: Set up .NET Core
+    - name: install .NET 5.0
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '5.0.x'
 
-    - name: dotnet publish
+    - name: build and publish
       run: dotnet publish -c Release -o '../../artifacts/Helpo'
 
-    - name: Deploy to Azure Web App
+    - name: deploy to azure web app
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'helpo-dev'
