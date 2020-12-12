@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using MudBlazor;
 using MudBlazor.Services;
 using Raven.Client.Documents;
+using System;
+using System.IO;
 
 namespace Helpo
 {
@@ -43,10 +45,16 @@ namespace Helpo
 
             services.AddSingleton<IDocumentStore>(serviceProvider =>
             {
+                var certificateData = this.Configuration.GetValue<string>("RavenDB:ClientCertificateData");
+                var certificatePath = this.Configuration.GetValue<string>("RavenDB:ClientCertificatePath");
+                var certificatePassword = this.Configuration.GetValue<string>("RavenDB:ClientCertificatePassword");
+
+                var certificate = string.IsNullOrWhiteSpace(certificatePath) == false && File.Exists(certificatePath)
+                    ? new X509Certificate2(certificatePath, certificatePassword)
+                    : new X509Certificate2(Convert.FromBase64String(certificateData), certificatePassword);
+
                 var store = new DocumentStore();
-                store.Certificate = new X509Certificate2(
-                    this.Configuration.GetValue<string>("RavenDB:ClientCertificatePath"), 
-                    this.Configuration.GetValue<string>("RavenDB:ClientCertificatePassword"));
+                store.Certificate = certificate;
                 store.Urls = new[] {this.Configuration.GetValue<string>("RavenDB:Url")};
                 store.Database = this.Configuration.GetValue<string>("RavenDB:DatabaseName");
 
