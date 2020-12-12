@@ -1,7 +1,26 @@
 ﻿@page "/About"
 
+@using Microsoft.Extensions.Configuration
+
+@inject IConfiguration Configuration
+
 <MudText Typo="Typo.body1"><b>Version</b> @(ThisAssembly.AssemblyInformationalVersion)</MudText>
 
+<MudDivider />
+
+<MudText Typo="Typo.h6">Configuration</MudText>
+@foreach(var item in _config)
+{
+    <MudText Typo="Typo.body1"><b>@item.Key</b>: @item.Value</MudText>
+}
+
 @code {
-    
+    private List<KeyValuePair<string, string>> _config = new();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        _config = this.Configuration.AsEnumerable().ToList();
+    }
 }
