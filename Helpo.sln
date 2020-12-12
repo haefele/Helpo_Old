@@ -8,18 +8,18 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helpo", "src\Helpo\Helpo.csproj", "{7ED1B6EE-7715-4CE0-8D56-B84D1AA64305}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution items", "solution items", "{BDE267F6-B60F-4061-B144-EDDE453C5364}"
-ProjectSection(SolutionItems) = preProject
-	.gitignore = .gitignore
-	README.md = README.md
-	version.txt = version.txt
-EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		README.md = README.md
+		version.txt = version.txt
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{75AB577B-587E-4D03-8905-6825194B4843}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{12DEF3E8-C710-4369-8B18-AFB37055264E}"
-ProjectSection(SolutionItems) = preProject
-	.github\workflows\cd.yml = .github\workflows\cd.yml
-EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\ci-cd.yml = .github\workflows\ci-cd.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
