@@ -1,7 +1,10 @@
-name: Build and Deploy to Azure
+name: Build and Deploy
 
 on:
   push:
+    branches:
+      - master
+  pull_request:
     branches:
       - master
 
@@ -27,6 +30,7 @@ jobs:
 
     - name: deploy to azure web app
       uses: azure/webapps-deploy@v2
+      if: github.event_name == 'push'
       with:
         app-name: 'helpo-dev'
         slot-name: 'production'
