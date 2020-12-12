@@ -51,7 +51,7 @@ namespace Helpo
 
                 var certificate = string.IsNullOrWhiteSpace(certificatePath) == false && File.Exists(certificatePath)
                     ? new X509Certificate2(certificatePath, certificatePassword)
-                    : new X509Certificate2(Convert.FromBase64String(certificateData), certificatePassword);
+                    : new X509Certificate2(Convert.FromBase64String(certificateData), certificatePassword, X509KeyStorageFlags.MachineKeySet);
 
                 var store = new DocumentStore();
                 store.Certificate = certificate;
