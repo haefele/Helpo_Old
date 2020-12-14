@@ -1,48 +1,31 @@
 ﻿@page "/Questions"
-@using Helpo.Shared.Toolbars
-@implements IAsyncDisposable
 
-<h1>Counter</h1>
+@inject NavigationManager NavigationManager
+@inject QuestionsService QuestionsService
 
-<p>Current count: @_currentCount</p>
+<AuthorizeView>
+    <Authorized>
+        <MudTooltip Text="Click to ask a new question.">
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Add" Color="Color.Primary" OnClick="@AskQuestion">Ask new question</MudButton>
+        </MudTooltip>
+    </Authorized>
+    <NotAuthorized>
+        <MudTooltip Text="To ask a new question you have to login first.">
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Add" Color="Color.Primary" Disabled="true" >Ask new question</MudButton>
+        </MudTooltip>
+    </NotAuthorized>
+</AuthorizeView>
 
-<MudButton OnClick="@IncrementCount">Click me</MudButton>
+<MudDivider Class="mt-4" />
 
 @code {
 
-    [Inject]
-    public ISnackbar Snackbar { get; set; } = default!;
-
-    [CascadingParameter]
-    public Toolbar Toolbar { get; set; } = default!;
-
-    private readonly ToolbarButton _addQuestionButton;
-
     public Questions()
     {
-        this._addQuestionButton = ToolbarButton.Create(Icons.Material.Add, "Swag", this.IncrementCount);
     }
 
-    protected override async Task OnInitializedAsync()
+    private void AskQuestion()
     {
-        await this.Toolbar.AddButton(this._addQuestionButton);
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        await this.Toolbar.RemoveButton(this._addQuestionButton);
-    }
-
-    private int _currentCount = 0;
-
-    private void IncrementCount()
-    {
-        _currentCount++;
-        this.StateHasChanged();
-    }
-    
-    private void AddQuestionClick()
-    {
-        this.Snackbar.Add("Yihaaaa");
+        this.NavigationManager.NavigateTo("/questions/new");
     }
 }

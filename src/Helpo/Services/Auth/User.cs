@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Helpo.Common;
+using System;
 
 namespace Helpo.Services.Auth
 {
@@ -6,9 +7,13 @@ namespace Helpo.Services.Auth
     {
         public static User Create(string name, int appUserI3D, int? contactPersonI3D)
         {
+            Guard.NotNull(name, nameof(name));
+            Guard.NotZeroOrNegative(appUserI3D, nameof(appUserI3D));
+            // contactPersonI3D
+
             return new User
             {
-                Id = Guid.NewGuid().ToString("D"),
+                Id = IdHelper.GenerateNewId(),
                 Name = name,
                 Kind = contactPersonI3D is null ? UserKind.User : UserKind.WebAccount,
                 AppUserI3D = contactPersonI3D is null ? appUserI3D : default,

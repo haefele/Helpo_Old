@@ -12,6 +12,7 @@ using MudBlazor.Services;
 using Raven.Client.Documents;
 using System;
 using System.IO;
+using Helpo.Services.Questions;
 
 namespace Helpo
 {
@@ -70,6 +71,7 @@ namespace Helpo
             });
             
             services.AddScoped<AuthService>();
+            services.AddScoped<QuestionsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
