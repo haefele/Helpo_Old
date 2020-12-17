@@ -10,14 +10,10 @@
 <MudContainer MaxWidth="MaxWidth.Small">
     <MudForm>
         <MudCard>
-            <MudCardHeader>
-                <CardHeaderContent>
-                    <MudText Typo="Typo.h5">Login</MudText>
-                </CardHeaderContent>
-            </MudCardHeader>
             <MudCardContent>
                 <MudTextField T="string"
                               Label="Username"
+                              Variant="Variant.Outlined"
                               Disabled="@LoginCommand.IsExecuting"
                               Immediate="true"
                               HelperText="Enter your username"
@@ -25,9 +21,12 @@
                               AdornmentIcon="@Icons.Material.Person"
                               OnKeyUp="@OnKeyUp"
                               @bind-Value="@_username"/>
-
+            
+                <div class="mt-6"></div>
+                
                 <MudTextField T="string"
                               Label="Password"
+                              Variant="Variant.Outlined"
                               Disabled="@LoginCommand.IsExecuting"
                               Immediate="true"
                               HelperText="Enter your password"
@@ -38,21 +37,23 @@
                               OnKeyUp="@OnKeyUp"
                               @bind-Value="@_password"/>
             </MudCardContent>
-            <MudCardActions>
-                <MudButton Variant="Variant.Filled"
-                           StartIcon="@Icons.Material.Login"
-                           Color="Color.Primary"
-                           Class="ml-auto"
-                           Command="@LoginCommand"
-                           Disabled="@(!LoginCommand.CanExecute)">Login</MudButton>
-            </MudCardActions>
         </MudCard>
+        
     </MudForm>
     
     @if (LoginCommand.IsExecuting)
     {
         <MudProgressLinear Indeterminate="true" Color="Color.Primary" />
     }
+    
+    <div class="mt-4 d-flex justify-end">
+        <MudButton Variant="Variant.Filled"
+                   StartIcon="@Icons.Material.Login"
+                   Color="Color.Primary"
+                   Class="ml-auto"
+                   Command="@LoginCommand"
+                   Disabled="@(!LoginCommand.CanExecute)">Login</MudButton>
+    </div>
 </MudContainer>
 
 @code {
