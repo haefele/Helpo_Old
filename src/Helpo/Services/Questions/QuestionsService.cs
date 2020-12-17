@@ -1,7 +1,6 @@
 ﻿using Helpo.Common;
 using Helpo.Services.Auth;
 using Raven.Client.Documents;
-using Raven.Client.Documents.Indexes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,12 +11,15 @@ namespace Helpo.Services.Questions
     public class QuestionsService
     {
         private readonly IDocumentStore _documentStore;
+        private readonly AuthService _authService;
 
-        public QuestionsService(IDocumentStore documentStore)
+        public QuestionsService(IDocumentStore documentStore, AuthService authService)
         {
             Guard.NotNull(documentStore, nameof(documentStore));
+            Guard.NotNull(authService, nameof(authService));
 
             this._documentStore = documentStore;
+            this._authService = authService;
         }
 
         public async Task<List<Questions_Newest.Result>> GetNewestQuestions(int page)
@@ -36,50 +38,21 @@ namespace Helpo.Services.Questions
                 .ToListAsync();
         }
 
-        public async Task<Question> CreateNew(string title, string body, List<string> tags)
+        public async Task<Question> CreateNew(string title, string body, List<string> tags, string application)
         {
+            var user = await this._authService.GetLoggedInUser();
+
+            if (user == null)
+                throw new Exception("Not logged in.");
+            
             using var session = this._documentStore.OpenAsyncSession();
 
-            var question = Question.CreateNew(title, body, null!, tags);
+            var question = Question.CreateNew(title, body, user.UserId, tags, application);
             await session.StoreAsync(question);
 
             await session.SaveChangesAsync();
 
             return question;
-        }
-    }
-
-    public class Questions_Newest : AbstractIndexCreationTask<Question, Questions_Newest.Result>
-    {
-        public Questions_Newest()
-        {
-            this.Map = questions =>
-                from question in questions
-                select new Result
-                {
-                    Id = question.Id,
-                    Title = question.Title,
-                    Tags = question.Tags,
-
-                    CreatedByName = LoadDocument<User>(question.CreatedByUserId).Name,
-                    CreatedAt = question.CreatedAt,
-
-                    HasAnswer = question.AnswerId != null
-                };
-
-            this.StoreAllFields(FieldStorage.Yes);
-        }
-
-        public class Result
-        {
-            public string Id { get; set; } = default!;
-            public string Title { get; set; } = default!;
-            public List<string> Tags { get; set; } = new List<string>();
-
-            public string CreatedByName { get; set; } = default!;
-            public DateTimeOffset CreatedAt { get; set; } = default!;
-
-            public bool HasAnswer { get; set; }
         }
     }
 }

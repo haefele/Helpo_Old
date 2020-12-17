@@ -1,5 +1,10 @@
 ﻿@page "/Questions/New"
+@using Helpo.Shared.Commands
 @attribute [Authorize]
+
+@inject ISnackbar Snackbar
+@inject QuestionsService QuestionsService
+@inject NavigationManager NavigationManager
 
 <MudForm>
     <MudCard>
@@ -7,36 +12,44 @@
             <MudTextField T="string"
                           Label="Title"
                           @bind-Value="@_title"
-                          Variant="Variant.Filled"
+                          Variant="Variant.Outlined"
+                          Disabled="@AskQuestionCommand.IsExecuting"
                           HelperText="Enter a short but descriptive title, like an email subject."/>
 
+            <div class="mt-6"></div>
+            
             <MudTextField T="string"
                           @bind-Value="@_question"
                           Label="Question"
                           Lines="10"
-                          Variant="Variant.Filled"
+                          Variant="Variant.Outlined"
+                          Disabled="@AskQuestionCommand.IsExecuting"
                           HelperText="Try to explain the question in detail, what you're trying to do, what your problem is, and what you tried already." />
+            
+            <div class="mt-6"></div>
             
             <MudTextField T="string" 
                           @bind-Value="@_newTag"
                           HelperText="Type a tag in this text field and press [Enter] or click the + button on the right to add the tag to this question."
                           Label="Tags" 
-                          Variant="Variant.Filled"
+                          Variant="Variant.Outlined"
+                          Disabled="@AskQuestionCommand.IsExecuting"
                           Adornment="Adornment.End"
                           AdornmentIcon="@Icons.Material.Add"
                           OnAdornmentClick="AddTag"
                           Immediate="true"
                           OnKeyDown="TagTextFieldOnKeyDown" />
             
-            <MudChipSet AllClosable="true" OnClose="RemoveTag"  >
-                @foreach (var tag in _tags)
-                {
-                    <MudChip Text="@tag" Variant="Variant.Outlined" />
-                }
-            </MudChipSet>
+            @foreach (var tag in _tags)
+            {
+                <MudChip Text="@tag" Variant="Variant.Outlined" OnClose="RemoveTag" Disabled="@AskQuestionCommand.IsExecuting" />
+            }
+            
+            <div class="mt-6"></div>
             
             <MudSelect T="string" 
-                       Variant="Variant.Filled"
+                       Variant="Variant.Outlined"
+                       Disabled="@AskQuestionCommand.IsExecuting"
                        @bind-Value="_application"
                        Label="Application" 
                        OffsetY="true"
@@ -50,13 +63,16 @@
     </MudCard>
 </MudForm>
 
-<MudButton Variant="Variant.Filled"
-           StartIcon="@Icons.Material.Add"
-           Class="mt-4"
-           Style="float: right;"
-           Color="Color.Primary">
-    Ask this question
-</MudButton>
+<div class="mt-4 d-flex justify-end">
+    <MudButton Variant="Variant.Filled"
+               StartIcon="@Icons.Material.Add"
+               Style="float: right;"
+               Color="Color.Primary"
+               Disabled="@(!AskQuestionCommand.CanExecute)"
+               Command="AskQuestionCommand">
+        Ask this question
+    </MudButton>
+</div>
 
 @code {
     #nullable enable
@@ -88,4 +104,26 @@
     }
 
     private string? _application = default;
+
+    private HelpoCommand AskQuestionCommand { get; set; } = default!;
+    
+    protected override void OnInitialized()
+    {
+        this.AskQuestionCommand = HelpoCommand.Async(this.AskQuestion).CanExecute(this.CanAskQuestion).Component(this.StateHasChanged).Snackbar(this.Snackbar);
+    }
+
+    private bool CanAskQuestion()
+    {
+        return string.IsNullOrWhiteSpace(this._title) == false &&
+               string.IsNullOrWhiteSpace(this._question) == false &&
+               string.IsNullOrWhiteSpace(this._application) == false;
+    }
+
+    private async Task AskQuestion()
+    {
+        await this.QuestionsService.CreateNew(this._title!, this._question!, this._tags, this._application!);
+        this.Snackbar.Add("Question asked!", Severity.Success);
+        
+        this.NavigationManager.NavigateTo("/questions");
+    }
 }
