@@ -42,7 +42,7 @@
             
             @foreach (var tag in _tags)
             {
-                <MudChip Text="@tag" Variant="Variant.Outlined" OnClose="RemoveTag" Disabled="@AskQuestionCommand.IsExecuting" />
+                <MudChip Text="@tag" Variant="Variant.Filled" OnClose="RemoveTag" Disabled="@AskQuestionCommand.IsExecuting" />
             }
             
             <div class="mt-6"></div>

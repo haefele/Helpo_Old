@@ -1,4 +1,5 @@
 ﻿@page "/Questions"
+@using Humanizer
 
 @inject NavigationManager NavigationManager
 @inject QuestionsService QuestionsService
@@ -18,14 +19,57 @@
 
 <MudDivider Class="mt-4" />
 
-@code {
+@if (this._questions == null)
+{
+    <div class="d-flex justify-center mt-4">
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+    </div>
+}
+else
+{
+    <MudPaper Class="mt-4">
+        <MudList Clickable="true">
+            @foreach (var question in this._questions)
+            {
+                <MudListItem OnClick="@(() => this.OnQuestionClick(question))">
+                    <MudGrid Spacing="0">
+                        <MudItem sm="9" md="10" xs="12">
+                            <MudText Typo="Typo.body1">@question.Title</MudText>
+                            @foreach (var tag in question.Tags)
+                            {
+                                <MudChip Class="ml-n1 mr-2">@tag</MudChip>
+                            }
+                        </MudItem>
+                        <MudItem sm="3" md="2" xs="12" Class="d-flex align-center">
+                            <div>
+                                <MudText Typo="Typo.subtitle1">@question.CreatedByName</MudText>
+                                <MudText Typo="Typo.subtitle2">@question.CreatedAt.Humanize()</MudText>
+                            </div>
+                        </MudItem>
+                    </MudGrid>
+                </MudListItem>
+                <MudDivider/>
+            }
+        </MudList>
+    </MudPaper>
+}
 
-    public Questions()
+@code {
+    #nullable enable
+    
+    private List<Questions_Newest.Result>? _questions = null;
+
+    protected override async Task OnInitializedAsync()
     {
+        this._questions = await this.QuestionsService.GetNewestQuestions(page: 1);
     }
 
     private void AskQuestion()
     {
         this.NavigationManager.NavigateTo("/questions/new");
+    }
+
+    private void OnQuestionClick(Questions_Newest.Result question)
+    {
     }
 }
