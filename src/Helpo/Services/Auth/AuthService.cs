@@ -7,6 +7,8 @@ using Centron.Host.Messages;
 using Centron.Host.RestRequests;
 using Centron.Interfaces.Administration.Connections;
 using CentronSoftware.Centron.WebServices.Connections;
+using Helpo.Common;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Configuration;
 using Raven.Client.Documents;
 
@@ -17,12 +19,19 @@ namespace Helpo.Services.Auth
         private readonly CentronWebService _centronWebService;
         private readonly IConfiguration _configuration;
         private readonly IDocumentStore _documentStore;
+        private readonly AuthenticationStateProvider _authenticationStateProvider;
 
-        public AuthService(CentronWebService centronWebService, IConfiguration configuration, IDocumentStore documentStore)
+        public AuthService(CentronWebService centronWebService, IConfiguration configuration, IDocumentStore documentStore, AuthenticationStateProvider authenticationStateProvider)
         {
-            this._centronWebService = centronWebService ?? throw new ArgumentNullException(nameof(centronWebService));
-            this._configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-            this._documentStore = documentStore ?? throw new ArgumentNullException(nameof(documentStore));
+            Guard.NotNull(centronWebService, nameof(centronWebService));
+            Guard.NotNull(configuration, nameof(configuration));
+            Guard.NotNull(documentStore, nameof(documentStore));
+            Guard.NotNull(authenticationStateProvider, nameof(authenticationStateProvider));
+            
+            this._centronWebService = centronWebService;
+            this._configuration = configuration;
+            this._documentStore = documentStore;
+            this._authenticationStateProvider = authenticationStateProvider;
         }
         
         public async Task<string> LoginAsync(string? username, string? password)
@@ -100,6 +109,17 @@ namespace Helpo.Services.Auth
                 new Claim(ClaimTypes.Name, existingUser.Name),
                 //new Claim(ClaimTypes.Role, string.Empty), //TODO: Implement for Admins/Doc-Writers/etc
             };
+        }
+
+        public async Task<LoggedInUser?> GetLoggedInUser()
+        {
+            var state = await this._authenticationStateProvider.GetAuthenticationStateAsync();
+            var user = state.User;
+
+            if (user == null)
+                return null;
+
+            return new LoggedInUser(user);
         }
     }
 }

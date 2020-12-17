@@ -12,6 +12,8 @@ using MudBlazor.Services;
 using Raven.Client.Documents;
 using System;
 using System.IO;
+using Helpo.Services.Questions;
+using Raven.Client.Documents.Indexes;
 
 namespace Helpo
 {
@@ -59,6 +61,8 @@ namespace Helpo
                 store.Database = this.Configuration.GetValue<string>("RavenDB:DatabaseName");
 
                 store.Initialize();
+                
+                IndexCreation.CreateIndexes(this.GetType().Assembly, store);
 
                 return store;
             });
@@ -70,6 +74,7 @@ namespace Helpo
             });
             
             services.AddScoped<AuthService>();
+            services.AddScoped<QuestionsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

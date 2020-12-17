@@ -1,48 +1,75 @@
 ﻿@page "/Questions"
-@using Helpo.Shared.Toolbars
-@implements IAsyncDisposable
+@using Humanizer
 
-<h1>Counter</h1>
+@inject NavigationManager NavigationManager
+@inject QuestionsService QuestionsService
 
-<p>Current count: @_currentCount</p>
+<AuthorizeView>
+    <Authorized>
+        <MudTooltip Text="Click to ask a new question.">
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Add" Color="Color.Primary" OnClick="@AskQuestion">Ask new question</MudButton>
+        </MudTooltip>
+    </Authorized>
+    <NotAuthorized>
+        <MudTooltip Text="To ask a new question you have to login first.">
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Add" Color="Color.Primary" Disabled="true" >Ask new question</MudButton>
+        </MudTooltip>
+    </NotAuthorized>
+</AuthorizeView>
 
-<MudButton OnClick="@IncrementCount">Click me</MudButton>
+<MudDivider Class="mt-4" />
+
+@if (this._questions == null)
+{
+    <div class="d-flex justify-center mt-4">
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+    </div>
+}
+else
+{
+    <MudPaper Class="mt-4">
+        <MudList Clickable="true">
+            @foreach (var question in this._questions)
+            {
+                <MudListItem OnClick="@(() => this.OnQuestionClick(question))">
+                    <MudGrid Spacing="0">
+                        <MudItem sm="9" md="10" xs="12">
+                            <MudText Typo="Typo.body1">@question.Title</MudText>
+                            @foreach (var tag in question.Tags)
+                            {
+                                <MudChip Class="ml-n1 mr-2">@tag</MudChip>
+                            }
+                        </MudItem>
+                        <MudItem sm="3" md="2" xs="12" Class="d-flex align-center">
+                            <div>
+                                <MudText Typo="Typo.subtitle1">@question.CreatedByName</MudText>
+                                <MudText Typo="Typo.subtitle2">@question.CreatedAt.Humanize()</MudText>
+                            </div>
+                        </MudItem>
+                    </MudGrid>
+                </MudListItem>
+                <MudDivider/>
+            }
+        </MudList>
+    </MudPaper>
+}
 
 @code {
-
-    [Inject]
-    public ISnackbar Snackbar { get; set; } = default!;
-
-    [CascadingParameter]
-    public Toolbar Toolbar { get; set; } = default!;
-
-    private readonly ToolbarButton _addQuestionButton;
-
-    public Questions()
-    {
-        this._addQuestionButton = ToolbarButton.Create(Icons.Material.Add, "Swag", this.IncrementCount);
-    }
+    #nullable enable
+    
+    private List<Questions_Newest.Result>? _questions = null;
 
     protected override async Task OnInitializedAsync()
     {
-        await this.Toolbar.AddButton(this._addQuestionButton);
+        this._questions = await this.QuestionsService.GetNewestQuestions(page: 1);
     }
 
-    public async ValueTask DisposeAsync()
+    private void AskQuestion()
     {
-        await this.Toolbar.RemoveButton(this._addQuestionButton);
+        this.NavigationManager.NavigateTo("/questions/new");
     }
 
-    private int _currentCount = 0;
-
-    private void IncrementCount()
+    private void OnQuestionClick(Questions_Newest.Result question)
     {
-        _currentCount++;
-        this.StateHasChanged();
-    }
-    
-    private void AddQuestionClick()
-    {
-        this.Snackbar.Add("Yihaaaa");
     }
 }
