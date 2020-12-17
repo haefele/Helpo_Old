@@ -13,6 +13,7 @@ using Raven.Client.Documents;
 using System;
 using System.IO;
 using Helpo.Services.Questions;
+using Raven.Client.Documents.Indexes;
 
 namespace Helpo
 {
@@ -60,6 +61,8 @@ namespace Helpo
                 store.Database = this.Configuration.GetValue<string>("RavenDB:DatabaseName");
 
                 store.Initialize();
+                
+                IndexCreation.CreateIndexes(this.GetType().Assembly, store);
 
                 return store;
             });
