@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using MudBlazor;
 
-namespace Helpo.Shared.Commands
+namespace Helpo.Common
 {
     public partial class HelpoCommand
     {
@@ -52,12 +52,12 @@ namespace Helpo.Shared.Commands
                 return this;
             }
 
-            public HelpoCommand Create()
+            public Common.HelpoCommand Create()
             {
-                return new HelpoCommand(this._execute, this._canExecute, this._stateHasChanged, this._snackbar);
+                return new Common.HelpoCommand(this._execute, this._canExecute, this._stateHasChanged, this._snackbar);
             }
 
-            public static implicit operator HelpoCommand(HelpoCommandBuilder builder)
+            public static implicit operator Common.HelpoCommand(HelpoCommandBuilder builder)
             {
                 if (builder is null) throw new ArgumentNullException(nameof(builder));
                 

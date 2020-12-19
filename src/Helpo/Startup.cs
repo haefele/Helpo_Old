@@ -12,7 +12,8 @@ using MudBlazor.Services;
 using Raven.Client.Documents;
 using System;
 using System.IO;
-using Helpo.Services.Questions;
+using Helpo.Questions;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Raven.Client.Documents.Indexes;
 
 namespace Helpo
@@ -33,6 +34,8 @@ namespace Helpo
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddControllers();
+
+            services.Configure<RazorPagesOptions>(f => f.RootDirectory = "/Shared");
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                     .AddCookie(options =>

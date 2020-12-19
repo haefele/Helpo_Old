@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using MudBlazor;
 
-namespace Helpo.Shared.Commands
+namespace Helpo.Common
 {
     public partial class HelpoCommand : ICommand
     {

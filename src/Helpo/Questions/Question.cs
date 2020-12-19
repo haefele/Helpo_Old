@@ -1,9 +1,9 @@
-﻿using Helpo.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Helpo.Common;
 
-namespace Helpo.Services.Questions
+namespace Helpo.Questions
 {
     public class Question
     {

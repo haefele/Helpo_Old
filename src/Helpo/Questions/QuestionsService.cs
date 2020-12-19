@@ -1,12 +1,12 @@
-﻿using Helpo.Common;
-using Helpo.Services.Auth;
-using Raven.Client.Documents;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Helpo.Common;
+using Helpo.Services.Auth;
+using Raven.Client.Documents;
 
-namespace Helpo.Services.Questions
+namespace Helpo.Questions
 {
     public class QuestionsService
     {

@@ -1,7 +1,6 @@
 ﻿using Helpo.Common;
-using System;
 
-namespace Helpo.Services.Auth
+namespace Helpo.Auth
 {
     public class User
     {

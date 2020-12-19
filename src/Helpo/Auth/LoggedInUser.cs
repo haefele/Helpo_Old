@@ -3,21 +3,21 @@ using System.Linq;
 using System.Security.Claims;
 using Helpo.Common;
 
-namespace Helpo.Services.Auth
+namespace Helpo.Auth
 {
     public class LoggedInUser
     {
-        private readonly ClaimsPrincipal _claimsPrincipal;
-        
         public string UserId { get; }
+        
+        public ClaimsPrincipal Principal { get; }
 
         public LoggedInUser(ClaimsPrincipal claimsPrincipal)
         {
             Guard.NotNull(claimsPrincipal, nameof(claimsPrincipal));
             
-            this._claimsPrincipal = claimsPrincipal;
+            this.Principal = claimsPrincipal;
 
-            this.UserId = this._claimsPrincipal.Claims?.FirstOrDefault(f => f.Type == "HelpoId")?.Value ?? throw new ArgumentException("Invalid claims identity.");
+            this.UserId = this.Principal.Claims?.FirstOrDefault(f => f.Type == "HelpoId")?.Value ?? throw new ArgumentException("Invalid claims identity.");
         }
     }
 }

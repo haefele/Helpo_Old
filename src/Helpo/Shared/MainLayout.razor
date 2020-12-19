@@ -1,5 +1,6 @@
-﻿@using Helpo.Shared.Toolbars
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
+
+@inject NavigationManager NavigationManager;
 
 <MudThemeProvider/>
 <MudDialogProvider/>
@@ -9,10 +10,6 @@
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
         <MudText Typo="Typo.h5">Helpo</MudText>
-        
-        <MudAppBarSpacer />
-        
-        <Toolbar @ref="_mainToolbar"/>
         
         <MudAppBarSpacer />
         
@@ -42,22 +39,13 @@
     </MudDrawer>
     <MudMainContent Class="px-4" Style="background-color: var(--mud-palette-background-grey);">
         <MudContainer Class="mt-4">
-            <CascadingValue Value="_mainToolbar">
-                @Body
-            </CascadingValue>
+            @Body
         </MudContainer>
     </MudMainContent>
 </MudLayout>
 
 @code
 {
-    #nullable enable
-
-    [Inject]
-    public NavigationManager NavigationManager { get; set; } = default!;
-    
-    private Toolbar _mainToolbar = default!;
-
     private bool _drawerOpen = true;
     
     private void ToggleDrawer()

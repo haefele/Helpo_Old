@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Helpo.Controllers
+namespace Helpo.Auth
 {
     public class AuthController : Controller
     {
