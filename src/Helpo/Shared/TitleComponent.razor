@@ -1,0 +1,28 @@
+﻿@using Helpo.Common
+<MudText Typo="Typo.h5">@_combinedTitle</MudText>
+
+@code {
+
+    private readonly List<(Guid id, string title)> _titles = new();
+    private string _combinedTitle = string.Empty;
+    
+    public IDisposable AddTitle(string title)
+    {
+        var id = Guid.NewGuid();
+        
+        this._titles.Add((id, title));
+        this.UpdateCombinedTitle();
+
+        return new DisposableAction(() =>
+        {
+            this._titles.Remove(this._titles.FirstOrDefault(f => f.id == id));
+            this.UpdateCombinedTitle();
+        });
+    }
+
+    private void UpdateCombinedTitle()
+    {
+        this._combinedTitle = string.Join(" | ", this._titles.Select(f => f.title));
+        this.InvokeAsync(this.StateHasChanged);
+    }
+}

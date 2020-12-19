@@ -9,7 +9,7 @@
 <MudLayout>
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
-        <MudText Typo="Typo.h5">Helpo</MudText>
+        <TitleComponent @ref="_titleComponent" />
         
         <MudAppBarSpacer />
         
@@ -39,7 +39,9 @@
     </MudDrawer>
     <MudMainContent Class="px-4" Style="background-color: var(--mud-palette-background-grey);">
         <MudContainer Class="mt-4">
-            @Body
+            <CascadingValue Value="@_titleComponent">
+                @Body
+            </CascadingValue>
         </MudContainer>
     </MudMainContent>
 </MudLayout>
@@ -47,6 +49,8 @@
 @code
 {
     private bool _drawerOpen = true;
+
+    private TitleComponent? _titleComponent;
     
     private void ToggleDrawer()
     {

@@ -1,18 +1,20 @@
 ﻿@page "/Questions"
 @using Humanizer
 
+@implements IDisposable;
+
 @inject NavigationManager NavigationManager
 @inject QuestionsService QuestionsService
 
 <AuthorizeView>
     <Authorized>
-        <MudTooltip Text="Click to ask a new question.">
-            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Add" Color="Color.Primary" OnClick="@AskQuestion">Ask new question</MudButton>
+        <MudTooltip Text="Click to ask question.">
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Add" Color="Color.Primary" OnClick="@AskQuestion">Ask a question</MudButton>
         </MudTooltip>
     </Authorized>
     <NotAuthorized>
-        <MudTooltip Text="To ask a new question you have to login first.">
-            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Add" Color="Color.Primary" Disabled="true" >Ask new question</MudButton>
+        <MudTooltip Text="You need to login first before you can ask a question.">
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Add" Color="Color.Primary" Disabled="true" >Ask a question</MudButton>
         </MudTooltip>
     </NotAuthorized>
 </AuthorizeView>
@@ -55,9 +57,17 @@ else
 }
 
 @code {
-    #nullable enable
     
-    private List<Questions_Newest.Result>? _questions = null;
+    private List<Questions_Newest.Result> _questions = new();
+    private IDisposable? _title = null;
+
+    [CascadingParameter]
+    public TitleComponent? TitleComponent { get; set; }
+
+    protected override void OnInitialized()
+    {
+        this._title = this.TitleComponent?.AddTitle("Questions");
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -66,10 +76,15 @@ else
 
     private void AskQuestion()
     {
-        this.NavigationManager.NavigateTo("/questions/new");
+        this.NavigationManager.NavigateTo("/questions/ask");
     }
 
     private void OnQuestionClick(Questions_Newest.Result question)
     {
+    }
+
+    public void Dispose()
+    {
+        this._title?.Dispose();
     }
 }
