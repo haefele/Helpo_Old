@@ -1,27 +1,11 @@
 ﻿@page "/About"
 
-@implements IDisposable
+@inherits HelpoPage
 
 <MudText Typo="Typo.body1"><b>Version</b> @(ThisAssembly.AssemblyInformationalVersion)</MudText>
 
 @code {
     #nullable enable
     
-    private IDisposable? _title;
-
-    [CascadingParameter]
-    public TitleComponent? TitleComponent { get; set; }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        this._title = this.TitleComponent?.AddTitle("About");
-    }
-
-    public void Dispose()
-    {
-        this._title?.Dispose();
-    }
-
+    public override string Title => "About";
 }

@@ -1,7 +1,7 @@
 ﻿@page "/Questions"
 @using Humanizer
 
-@implements IDisposable;
+@inherits HelpoPage
 
 @inject NavigationManager NavigationManager
 @inject QuestionsService QuestionsService
@@ -21,7 +21,7 @@
 
 <MudDivider Class="mt-4" />
 
-@if (this._questions == null)
+@if (this._questions is null)
 {
     <div class="d-flex justify-center mt-4">
         <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
@@ -57,17 +57,11 @@ else
 }
 
 @code {
+    #nullable enable
     
-    private List<Questions_Newest.Result> _questions = new();
-    private IDisposable? _title = null;
-
-    [CascadingParameter]
-    public TitleComponent? TitleComponent { get; set; }
-
-    protected override void OnInitialized()
-    {
-        this._title = this.TitleComponent?.AddTitle("Questions");
-    }
+    public override string Title => "Questions";
+    
+    private List<Questions_Newest.Result>? _questions = default;
 
     protected override async Task OnInitializedAsync()
     {
@@ -81,10 +75,5 @@ else
 
     private void OnQuestionClick(Questions_Newest.Result question)
     {
-    }
-
-    public void Dispose()
-    {
-        this._title?.Dispose();
     }
 }

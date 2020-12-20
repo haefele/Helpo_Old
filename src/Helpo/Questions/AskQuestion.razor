@@ -1,8 +1,8 @@
 ﻿@page "/Questions/Ask"
-@using HelpoCommand = Helpo.Common.HelpoCommand
-@attribute [Authorize]
+@using Helpo.Common
 
-@implements IDisposable
+@attribute [Authorize]
+@inherits HelpoPage
 
 @inject ISnackbar Snackbar
 @inject QuestionsService QuestionsService
@@ -107,17 +107,15 @@
 
     private string? _application = default;
 
-    private IDisposable? _pageTitle;
-    
+    public override string Title => "Ask a question";
+
     private HelpoCommand AskQuestionCommand { get; set; } = default!;
-    
-    [CascadingParameter]
-    public TitleComponent? TitleComponent { get; set; }
     
     protected override void OnInitialized()
     {
+        base.OnInitialized();
+        
         this.AskQuestionCommand = HelpoCommand.Async(this.AskNewQuestion).CanExecute(this.CanAskQuestion).Component(this.StateHasChanged).Snackbar(this.Snackbar);
-        this._pageTitle = this.TitleComponent?.AddTitle("Ask a question");
     }
 
     private bool CanAskQuestion()
@@ -133,10 +131,5 @@
         this.Snackbar.Add("Question asked!", Severity.Success);
         
         this.NavigationManager.NavigateTo("/questions");
-    }
-
-    public void Dispose()
-    {
-        this._pageTitle?.Dispose();
     }
 }

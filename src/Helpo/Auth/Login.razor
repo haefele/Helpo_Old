@@ -1,6 +1,8 @@
 ﻿@using InputType = MudBlazor.InputType
 @using HelpoCommand = Helpo.Common.HelpoCommand
 
+@inherits HelpoPage
+
 @inject ISnackbar Snackbar
 @inject NavigationManager NavigationManager
 @inject AuthService AuthService
@@ -59,12 +61,16 @@
 @code {
     #nullable enable
 
+    public override string Title => "Login";
+
     private bool _showPassword = false;
     private string? _username = null;
     private string? _password = null;
 
     protected override void OnInitialized()
     {
+        base.OnInitialized();
+        
         this.LoginCommand = HelpoCommand.Async(this.TryLogin).CanExecute(this.CanLogin).Component(this.StateHasChanged).Snackbar(this.Snackbar);
     }
 

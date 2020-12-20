@@ -1,9 +1,13 @@
 ﻿@page "/Documentation"
 
+@inherits HelpoPage
+
 <h3>Documentation</h3>
 
 <MudTextField T="String" Placeholder="Search"></MudTextField>
 
 @code {
-    
+
+    public override string Title => "Documentation";
+
 }
