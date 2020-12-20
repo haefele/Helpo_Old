@@ -1,13 +1,9 @@
-﻿@using InputType = MudBlazor.InputType
-@using HelpoCommand = Helpo.Common.HelpoCommand
+﻿@page "/Login"
 
 @inherits HelpoPage
 
-@inject ISnackbar Snackbar
 @inject NavigationManager NavigationManager
 @inject AuthService AuthService
-
-@page "/Login"
 
 <MudContainer MaxWidth="MaxWidth.Small">
     <MudForm>
@@ -67,11 +63,9 @@
     private string? _username = null;
     private string? _password = null;
 
-    protected override void OnInitialized()
+    public Login()
     {
-        base.OnInitialized();
-        
-        this.LoginCommand = HelpoCommand.Async(this.TryLogin).CanExecute(this.CanLogin).Component(this.StateHasChanged).Snackbar(this.Snackbar);
+        this.LoginCommand = this.CreateCommand(this.TryLogin, this.CanLogin);
     }
 
     private void OnKeyUp(KeyboardEventArgs obj)
@@ -80,7 +74,7 @@
             this.LoginCommand.Execute();
     }
 
-    private HelpoCommand LoginCommand { get; set; } = default!;
+    private HelpoCommand LoginCommand { get; }
     private bool CanLogin()
     {
         return string.IsNullOrWhiteSpace(this._username) == false && 

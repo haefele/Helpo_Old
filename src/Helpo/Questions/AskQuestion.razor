@@ -1,10 +1,8 @@
 ﻿@page "/Questions/Ask"
-@using Helpo.Common
 
 @attribute [Authorize]
 @inherits HelpoPage
 
-@inject ISnackbar Snackbar
 @inject QuestionsService QuestionsService
 @inject NavigationManager NavigationManager
 
@@ -106,16 +104,16 @@
     }
 
     private string? _application = default;
+    
+    
 
     public override string Title => "Ask a question";
 
-    private HelpoCommand AskQuestionCommand { get; set; } = default!;
-    
-    protected override void OnInitialized()
+    private HelpoCommand AskQuestionCommand { get; }
+
+    public AskQuestion()
     {
-        base.OnInitialized();
-        
-        this.AskQuestionCommand = HelpoCommand.Async(this.AskNewQuestion).CanExecute(this.CanAskQuestion).Component(this.StateHasChanged).Snackbar(this.Snackbar);
+        this.AskQuestionCommand = this.CreateCommand(this.AskNewQuestion, this.CanAskQuestion);
     }
 
     private bool CanAskQuestion()

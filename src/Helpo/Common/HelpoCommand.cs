@@ -5,13 +5,13 @@ using MudBlazor;
 
 namespace Helpo.Common
 {
-    public partial class HelpoCommand : ICommand
+    public class HelpoCommand : ICommand
     {
         #region Fields
         private readonly Func<Task> _execute;
         private readonly Func<bool>? _canExecute;
-        private readonly Action? _stateHasChanged;
-        private readonly ISnackbar? _snackbar;
+        private readonly Func<Task>? _stateHasChanged;
+        private readonly Func<ISnackbar>? _snackbarAccessor;
         #endregion
 
         #region Properties
@@ -19,12 +19,17 @@ namespace Helpo.Common
         #endregion
 
         #region Constructors
-        private HelpoCommand(Func<Task> execute, Func<bool>? canExecute, Action? stateHasChanged, ISnackbar? snackbar)
+        public HelpoCommand(Func<Task> execute, Func<bool>? canExecute, Func<Task>? stateHasChanged, Func<ISnackbar>? snackbarAccessor)
         {
+            Guard.NotNull(execute, nameof(execute));
+            // canExecute
+            // stateHasChanged
+            // snackbarAccessor
+            
             this._execute = this.Wrap(execute);
             this._canExecute = canExecute;
             this._stateHasChanged = stateHasChanged;
-            this._snackbar = snackbar;
+            this._snackbarAccessor = snackbarAccessor;
         }
         #endregion
 
@@ -44,13 +49,13 @@ namespace Helpo.Common
             try
             {
                 this.IsExecuting = true;
-                this._stateHasChanged?.Invoke();
+                await (this._stateHasChanged?.Invoke() ?? Task.CompletedTask);
                 await this._execute();
             }
             finally
             {
                 this.IsExecuting = false;
-                this._stateHasChanged?.Invoke();
+                await (this._stateHasChanged?.Invoke() ?? Task.CompletedTask);
             }
         }
         #endregion
@@ -66,10 +71,10 @@ namespace Helpo.Common
                 }
                 catch (Exception exception)
                 {
-                    if (this._snackbar is null)
+                    if (this._snackbarAccessor is null)
                         throw;
                     
-                    this._snackbar.Add(exception.Message, Severity.Error);
+                    this._snackbarAccessor?.Invoke().Add(exception.Message, Severity.Error);
                 }
             };
         }
