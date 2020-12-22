@@ -37,16 +37,36 @@ else
                 <MudListItem OnClick="@(() => this.OnQuestionClick(question))">
                     <MudGrid Spacing="0">
                         <MudItem sm="9" md="10" xs="12">
-                            <MudText Typo="Typo.body1">@question.Title</MudText>
-                            @foreach (var tag in question.Tags)
-                            {
-                                <MudChip Class="ml-n1 mr-2">@tag</MudChip>
-                            }
+                            <div>
+                                <MudTooltip Text="The title of the question.">
+                                    <MudText Typo="Typo.body1">@question.Title</MudText>
+                                </MudTooltip>
+                            </div>
+
+                            <MudTooltip Text="The application this question is about.">
+                                <MudChip Class="ml-n1 mr-2" Color="Color.Primary">@question.Application</MudChip>
+                            </MudTooltip>
+
+                            <MudTooltip Text="The tags of the question.">
+                                @foreach (var tag in question.Tags)
+                                {
+                                    <MudChip Class="ml-n1 mr-2">@tag</MudChip>
+                                }
+                            </MudTooltip>
                         </MudItem>
                         <MudItem sm="3" md="2" xs="12" Class="d-flex align-center">
                             <div>
-                                <MudText Typo="Typo.subtitle1">@question.CreatedByName</MudText>
-                                <MudText Typo="Typo.subtitle2">@question.CreatedAt.Humanize()</MudText>
+                                <div>
+                                    <MudTooltip Text="Who asked this question.">
+                                        <MudText Typo="Typo.subtitle1">@question.CreatedByName</MudText>
+                                    </MudTooltip>
+                                </div>
+
+                                <div>
+                                    <MudTooltip Text="@($"This question was asked on {@question.CreatedAt:G}.")">
+                                        <MudText Typo="Typo.subtitle2">@question.CreatedAt.Humanize()</MudText>
+                                    </MudTooltip>
+                                </div>
                             </div>
                         </MudItem>
                     </MudGrid>
