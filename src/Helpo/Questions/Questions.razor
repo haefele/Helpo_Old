@@ -34,7 +34,7 @@ else
         <MudList Clickable="true">
             @foreach (var question in this._questions)
             {
-                <MudListItem OnClick="@(() => this.OnQuestionClick(question))">
+                <MudListItem OnClick="@(() => this.OnQuestionClick(question))" DisableRipple="true">
                     <MudGrid Spacing="0">
                         <MudItem sm="9" md="10" xs="12">
                             <div>
