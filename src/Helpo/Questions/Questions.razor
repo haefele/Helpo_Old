@@ -96,5 +96,6 @@ else
 
     private void OnQuestionClick(Questions_Newest.Result question)
     {
+        this.NavigationManager.NavigateTo($"/questions/{question.Id}");
     }
 }

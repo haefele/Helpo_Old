@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Helpo.Auth;
 using Helpo.Common;
 using Helpo.Services.Auth;
 using Raven.Client.Documents;
@@ -53,6 +54,20 @@ namespace Helpo.Questions
             await session.SaveChangesAsync();
 
             return question;
+        }
+
+        public async Task<(Question? question, User? createdBy)> GetQuestion(string questionId)
+        {
+            using var session = this._documentStore.OpenAsyncSession();
+
+            var question = await session.LoadAsync<Question>(questionId, f => f.IncludeDocuments<User>(d => d.CreatedByUserId));
+            
+            if (question is null) // Question doesn't exist
+                return (null, null);
+            
+            var createdBy = await session.LoadAsync<User>(question.CreatedByUserId);
+
+            return (question, createdBy);
         }
     }
 }
