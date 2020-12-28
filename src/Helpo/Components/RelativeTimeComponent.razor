@@ -1,0 +1,19 @@
+﻿@using Humanizer
+
+<MudTooltip Text="@(string.Format(this.ToolTipTemplate, this.DateTimeOffset?.ToString("G")))">
+    <MudText Typo="@this.Typo">@this.DateTimeOffset.Humanize()</MudText>
+</MudTooltip>
+
+@code {
+    #nullable enable
+    
+    [Parameter]
+    public DateTimeOffset? DateTimeOffset { get; set; }
+
+    [Parameter]
+    public string ToolTipTemplate { get; set; } = "{0}";
+
+    [Parameter]
+    public Typo Typo { get; set; } = Typo.body1;
+
+}

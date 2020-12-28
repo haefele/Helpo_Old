@@ -1,6 +1,4 @@
-﻿@using Humanizer
-
-@page "/Questions"
+﻿@page "/Questions"
 
 @inherits HelpoPage
 
@@ -42,17 +40,10 @@ else
                                     <MudText Typo="Typo.body1">@question.Title</MudText>
                                 </MudTooltip>
                             </div>
-
-                            <MudTooltip Text="The application this question is about.">
-                                <MudChip Class="ml-n1 mr-2" Color="Color.Primary">@question.Application</MudChip>
-                            </MudTooltip>
-
-                            <MudTooltip Text="The tags of the question.">
-                                @foreach (var tag in question.Tags)
-                                {
-                                    <MudChip Class="ml-n1 mr-2">@tag</MudChip>
-                                }
-                            </MudTooltip>
+                            
+                            <div class="ml-n1">
+                                <TagListComponent Application="@question.Application" Tags="@question.Tags" />    
+                            </div>
                         </MudItem>
                         <MudItem sm="3" md="2" xs="12" Class="d-flex align-center">
                             <div>
@@ -63,9 +54,7 @@ else
                                 </div>
 
                                 <div>
-                                    <MudTooltip Text="@($"This question was asked on {@question.CreatedAt:G}.")">
-                                        <MudText Typo="Typo.subtitle2">@question.CreatedAt.Humanize()</MudText>
-                                    </MudTooltip>
+                                    <RelativeTimeComponent Typo="Typo.subtitle2" DateTimeOffset="@question.CreatedAt" ToolTipTemplate="This question was asked on {0}." />
                                 </div>
                             </div>
                         </MudItem>

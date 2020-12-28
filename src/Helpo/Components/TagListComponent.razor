@@ -1,0 +1,29 @@
+﻿<div>
+    @if (this.Application is not null)
+    {
+        <MudTooltip Text="The application this question is about.">
+            <MudChip Color="Color.Primary">@this.Application</MudChip>
+        </MudTooltip>
+    }
+
+    @if (this.Tags is not null)
+    {
+        <MudTooltip Text="The tags of the question.">
+            @foreach (var tag in this.Tags)
+            {
+                <MudChip Class="mr-1">@tag</MudChip>
+            }
+        </MudTooltip>
+    }
+</div>
+
+@code {
+    #nullable enable
+    
+    [Parameter]
+    public string? Application { get; set; }
+    
+    [Parameter]
+    public IList<string>? Tags { get; set; }
+    
+}
