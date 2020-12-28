@@ -1,0 +1,76 @@
+﻿@using Humanizer
+@using Helpo.Pages.Auth
+
+@page "/questions/{questionId}"
+
+@inherits HelpoPage
+
+@inject QuestionsService QuestionsService
+
+@if (this._question is null || this._createdBy is null)
+{
+    <div class="d-flex justify-center mt-4">
+        <MudProgressCircular Indeterminate="true" Size="Size.Medium" />
+    </div>
+}
+else
+{
+    <MudCard class="mt-4">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <div class="d-flex">
+                    <MudText Typo="Typo.h6" Class="mr-auto">@this._question.Title</MudText>
+                    <MudText Typo="Typo.body2" Class="align-self-center">
+                        asked by <bold>@this._createdBy.Name</bold> @this._question.CreatedAt.Humanize()
+                    </MudText>
+                </div>
+            </CardHeaderContent>
+        </MudCardHeader>
+        
+        <MudCardContent>
+            <MudText>@this._question.Content</MudText>
+        </MudCardContent>
+        
+        <MudCardActions>
+            <MudChip Color="Color.Primary">@this._question.Application</MudChip>
+            @foreach (var tag in this._question.Tags)
+            {
+                <MudChip Class="mr-1">@tag</MudChip>
+            }
+        </MudCardActions>
+    </MudCard>
+    
+    <MudCard class="mt-4">
+        <MudCardContent>
+            <MudTextField T="string"
+                          Label="Write an answer"
+                          Lines="10"
+                          Variant="Variant.Outlined"
+                          HelperText="Type your answer to this question here."/>
+        </MudCardContent>
+    </MudCard>
+    
+    
+}
+
+@code {
+    #nullable enable
+
+    public override string Title => "Question";
+
+    [Parameter]
+    public string QuestionId { get; set; } = default!;
+
+    private Question? _question = default;
+    private User? _createdBy = default;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        var (question, createdBy) = await this.QuestionsService.GetQuestion(this.QuestionId);
+
+        this._question = question;
+        this._createdBy = createdBy;
+    }
+}

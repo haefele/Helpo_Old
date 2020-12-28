@@ -3,7 +3,7 @@ using System.Linq;
 using System.Security.Claims;
 using Helpo.Common;
 
-namespace Helpo.Auth
+namespace Helpo.Pages.Auth
 {
     public class LoggedInUser
     {

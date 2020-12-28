@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Helpo.Auth;
 using Helpo.Common;
-using Helpo.Services.Auth;
+using Helpo.Pages.Auth;
 using Raven.Client.Documents;
 
-namespace Helpo.Questions
+namespace Helpo.Pages.Questions
 {
     public class QuestionsService
     {

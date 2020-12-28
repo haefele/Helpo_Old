@@ -7,13 +7,12 @@ using Centron.Host.Messages;
 using Centron.Host.RestRequests;
 using Centron.Interfaces.Administration.Connections;
 using CentronSoftware.Centron.WebServices.Connections;
-using Helpo.Auth;
 using Helpo.Common;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Configuration;
 using Raven.Client.Documents;
 
-namespace Helpo.Services.Auth
+namespace Helpo.Pages.Auth
 {
     public class AuthService
     {

@@ -5,14 +5,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Security.Cryptography.X509Certificates;
 using CentronSoftware.Centron.WebServices.Connections;
-using Helpo.Services.Auth;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using MudBlazor;
 using MudBlazor.Services;
 using Raven.Client.Documents;
 using System;
 using System.IO;
-using Helpo.Questions;
+using Helpo.Pages.Auth;
+using Helpo.Pages.Questions;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Raven.Client.Documents.Indexes;
 

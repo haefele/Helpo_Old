@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Helpo.Common;
-using Helpo.Shared;
+using Helpo.Components;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace Helpo
+namespace Helpo.Pages
 {
     public abstract class HelpoPage : ComponentBase, IDisposable
     {

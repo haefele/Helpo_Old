@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Helpo.Auth;
+using Helpo.Pages.Auth;
 using Raven.Client.Documents.Indexes;
 
-namespace Helpo.Questions
+namespace Helpo.Pages.Questions
 {
     public class Questions_Newest : AbstractIndexCreationTask<Question, Questions_Newest.Result>
     {

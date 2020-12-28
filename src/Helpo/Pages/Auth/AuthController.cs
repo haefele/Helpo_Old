@@ -1,11 +1,10 @@
 ﻿using System.Security.Claims;
 using System.Threading.Tasks;
-using Helpo.Services.Auth;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Helpo.Auth
+namespace Helpo.Pages.Auth
 {
     public class AuthController : Controller
     {

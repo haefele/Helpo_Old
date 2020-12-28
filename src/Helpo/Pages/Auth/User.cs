@@ -1,6 +1,6 @@
 ﻿using Helpo.Common;
 
-namespace Helpo.Auth
+namespace Helpo.Pages.Auth
 {
     public class User
     {
